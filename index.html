@@ -8,6 +8,12 @@
   </head>
   <body>
     <div id="app">
+      <h2>Characteristics</h2>
+      <ul>
+        <li v-for="(stat, element) in bendersByPower">
+          {{ element }} : {{ stat }}
+        </li>
+      </ul>
       <p v-if="characterList.length === 0">There are no characters</p>
       <ul v-else-if="characterList.length % 2 === 0">
         <li v-for="character in characterList">
@@ -15,6 +21,8 @@
           <button @click="favoriteCharacter(character)">⭐ Favorite</button>
         </li>
       </ul>
+      <p v-else>There are odd characters!</p>
+
       <h2>Favorite Characters</h2>
       <ul v-if="favoriteList.length > 0">
         <li v-for="character in favoriteList">{{ character }}</li>
@@ -34,7 +42,6 @@
           }}
         </span>
       </p>
-      <p v-else>There are odd characters!</p>
     </div>
 
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -42,34 +49,55 @@
       Vue.createApp({
         data: () => ({
           newCharacter: {
-            name: ''
+            name: "",
+            elements: [],
           },
           characterList: [
             {
-              name: 'Aang'
+              name: "Aang",
+              elements: ["Earth", "Fire", "Air", "Water"],
             },
             {
-              name: 'Zuko'
+              name: "Zuko",
+              elements: ["Fire"],
             },
             {
-              name: 'Toph'
+              name: "Toph",
+              elements: ["Earth"],
             },
             {
-              name: 'Katara'
-            }
+              name: "Katara",
+              elements: ["Water"],
+            },
           ],
-          favoriteList: []
+          favoriteList: [],
         }),
+        computed: {
+          bendersByPower() {
+            const res = this.characterList.reduce((acc, character) => {
+              character.elements.forEach(element => {
+                if (acc.hasOwnProperty(element)) {
+                  acc[element] = acc[element] + 1;
+                } else {
+                  acc[element] = 1;
+                }
+              });
+              return acc;
+            }, {});
+            return res;
+            console.log(res);
+          },
+        },
         methods: {
           addNewCharacter() {
-            this.characterList.push(this.newCharacter)
-            this.newCharacter = { name: '' }
+            this.characterList.push(this.newCharacter);
+            this.newCharacter = { name: "" };
           },
           favoriteCharacter(character) {
-            this.favoriteList.push(character)
-          }
-        }
-      }).mount('#app')
+            this.favoriteList.push(character);
+          },
+        },
+      }).mount("#app");
     </script>
   </body>
 </html>
