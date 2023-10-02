@@ -1,4 +1,5 @@
 <script setup>
+import { useUsers } from "../composables/useUsers";
 import UserCard from "./UserCard.vue";
 import { defineProps, reactive } from "vue";
 
@@ -15,15 +16,7 @@ const state = reactive({
   userList: [],
 });
 
-async function fetchUsers() {
-  const response = await fetch(
-    "https://jsonplaceholder.typicode.com/users"
-  ).then((response) => response.json());
-
-  return response;
-}
-
-state.userList = await fetchUsers();
+state.userList = await useUsers();
 </script>
 
 <template>
